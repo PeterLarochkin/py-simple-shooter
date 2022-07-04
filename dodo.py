@@ -15,7 +15,7 @@ def task_extract() -> dict:
         "actions": [
             (create_folder, ['shooter/po']),
             'pybabel extract -o shooter/po/shooter.pot shooter'
-            ],
+        ],
         "file_dep": glob.glob('**/*.py', recursive=True),
         "targets": ['shooter/po/shooter.pot'],
         "clean": True,
@@ -29,12 +29,12 @@ def task_init() -> dict:
             (create_folder, ['shooter/locale']),
             'pybabel init -D shooter -i shooter/po/shooter.pot -d shooter/locale -l ru',
             'pybabel init -D shooter -i shooter/po/shooter.pot -d shooter/locale -l en',
-            ],
+        ],
         "file_dep": ['shooter/po/shooter.pot'],
         "targets": [
             'shooter/locale/ru/LC_MESSAGES/shooter.po',
             'shooter/locale/en/LC_MESSAGES/shooter.po',
-            ],
+        ],
     }
 
 
@@ -44,14 +44,14 @@ def task_compile() -> dict:
         "actions": [
             "pybabel compile -D shooter -d shooter/locale -l ru",
             "pybabel compile -D shooter -d shooter/locale -l en"
-            ],
+        ],
         # "file_dep": [
         #     'src/py-simple-shooter/locale/ru/LC_MESSAGES/py-simple-shooter.po',
         #     'src/py-simple-shooter/locale/en/LC_MESSAGES/py-simple-shooter.po',],
         "targets": [
             'shooter/locale/ru/LC_MESSAGES/shooter.mo',
             'shooter/locale/en/LC_MESSAGES/shooter.mo',
-            ],
+        ],
         "clean": True,
     }
 
@@ -62,7 +62,7 @@ def task_update() -> dict:
         "actions": [
             "pybabel update -D shooter -i shooter/po/shooter.pot -d shooter/locale -l en",
             "pybabel update -D shooter -i shooter/po/shooter.pot -d shooter/locale -l ru",
-            ],
+        ],
         "task_dep": ['extract'],
         "file_dep": ['shooter/po/shooter.pot'],
         "clean": True,
@@ -91,9 +91,11 @@ def task_wheel():
         "actions": ['python3 -m build -w'],
         "verbosity": 2,
         "task_dep": ['compile'],
-        "targets": glob.glob("dist/*.whl") + glob.glob("*.egg-info") if glob.glob("dist/*.whl") else ['.whl'],
+        "targets": glob.glob("dist/*.whl") + glob.glob("*.egg-info")
+        if glob.glob("dist/*.whl") else ['.whl'],
         "clean": [clean_egg, clean, clean_targets],
     }
+
 
 def task_source():
     """Create source distribution."""
@@ -102,7 +104,6 @@ def task_source():
     return {
         "actions": ['python3 -m build -s'],
         "verbosity": 2,
-        "task_dep": ['compile'],
         "targets": glob.glob("dist/*.tar.gz") if glob.glob("dist/*.tar.gz") else ['.tar.gz'],
         "clean": [clean, clean_build],
     }
